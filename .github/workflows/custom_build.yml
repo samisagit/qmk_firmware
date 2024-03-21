@@ -1,0 +1,41 @@
+name: Custom Build
+
+permissions:
+  contents: read
+
+on: [push]
+
+jobs:
+  build:
+    name: "Build"
+    strategy:
+      fail-fast: false
+    container: ghcr.io/qmk/qmk_cli
+    runs-on: ubuntu-latest
+    steps:
+    - name: Disable safe.directory check
+      run : git config --global --add safe.directory '*'
+
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        ref: ${{ github.event.inputs.branch || github.ref }}
+
+    - name: Install dependencies
+      run: pip3 install -r requirements.txt
+
+    - name: Compile firmware
+      run: qmk compile -kb splitkb/aurora/corne/rev1 -km samisagit
+
+    - name: 'Upload artifacts'
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: compiled-artifacts
+        if-no-files-found: ignore
+        path: |
+          *.bin
+          *.hex
+          *.uf2
+          .build/failed.*
+
