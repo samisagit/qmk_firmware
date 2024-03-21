@@ -25,7 +25,7 @@ jobs:
       run: pip3 install -r requirements.txt
 
     - name: Compile firmware
-      run: qmk compile -kb splitkb/aurora/corne/rev1 -km samisagit
+      run: qmk compile -kb splitkb/aurora/corne/rev1 -km samisagit -e CONVERT_TO=liatris
 
     - name: 'Upload artifacts'
       uses: actions/upload-artifact@v4
