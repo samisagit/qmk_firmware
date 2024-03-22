@@ -1,15 +1,18 @@
-name: Custom Build
+name: Release Firmware
 
 permissions:
-  contents: read
+  contents: write
 
-on: [push]
+on:
+  push:
+    tags:
+      - "*"
 
 jobs:
   build:
-    name: "Build"
+    name: "Release"
     strategy:
-      fail-fast: false
+      fail-fast: true
     container: ghcr.io/qmk/qmk_cli
     runs-on: ubuntu-latest
     steps:
@@ -27,13 +30,10 @@ jobs:
     - name: Compile firmware
       run: qmk compile -kb splitkb/aurora/corne/rev1 -km samisagit -e CONVERT_TO=liatris
 
-    - name: 'Upload artifacts'
-      uses: actions/upload-artifact@v4
-      if: always()
+    - name: Release
+      uses: softprops/action-gh-release@v2
       with:
-        name: compiled-artifacts
-        if-no-files-found: ignore
-        path: |
+        files: |
           *.bin
           *.hex
           *.uf2
