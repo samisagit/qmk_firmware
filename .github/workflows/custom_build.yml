@@ -19,8 +19,6 @@ jobs:
         keyboard:
           - board: "splitkb/aurora/corne/rev1"
             map: "samisagit"
-          - board: "splitkb/aurora/corne/rev1"
-            map: "default"
     container: ghcr.io/qmk/qmk_cli
     runs-on: ubuntu-latest
     steps:
