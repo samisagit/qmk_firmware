@@ -7,6 +7,8 @@ on:
   push:
     tags:
       - "*"
+    branches:
+      - "*"
 
 jobs:
   build:
@@ -44,6 +46,7 @@ jobs:
         zip -r $SLUG.zip ${{matrix.keyboard.board}}/${{matrix.keyboard.map}}
 
     - name: Release
+      if: startsWith(github.event.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v2
       with:
         files: |
