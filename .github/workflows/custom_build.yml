@@ -13,6 +13,10 @@ jobs:
     name: "Release"
     strategy:
       fail-fast: true
+      matrix:
+        keyboard:
+          - board: "splitkb/aurora/corne/rev1"
+            map: "samisagit"
     container: ghcr.io/qmk/qmk_cli
     runs-on: ubuntu-latest
     steps:
@@ -27,15 +31,18 @@ jobs:
     - name: Install dependencies
       run: pip3 install -r requirements.txt
 
-    - name: Compile firmware
-      run: qmk compile -kb splitkb/aurora/corne/rev1 -km samisagit -e CONVERT_TO=liatris
+    - name: Compile Liatris firmware
+      run: |
+        # compile a given keyboard/map
+        qmk compile -kb ${{ matrix.keyboard.board }} -km ${{ matrix.keyboard.map }} -e CONVERT_TO=liatris -e BUILD_DIR=${{matrix.keyboard.board}}/${{matrix.keyboard.map}}
+        # generate info for compiled map
+        qmk info -kb ${{ matrix.keyboard.board }} -km ${{ matrix.keyboard.map }} > ${{matrix.keyboard.board}}/${{matrix.keyboard.map}}/README.md
+        # zip results for upload
+        SLUG=$(echo -n ${{matrix.keyboard.board}}/${{matrix.keyboard.map}} | sed  's/\//-/g')
+        zip -r $SLUG.zip ${{matrix.keyboard.board}}/${{matrix.keyboard.map}}
 
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          *.bin
-          *.hex
-          *.uf2
-          .build/failed.*
-
+          *.zip
