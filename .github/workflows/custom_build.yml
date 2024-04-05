@@ -18,6 +18,7 @@ jobs:
       matrix:
         keyboard:
           - board: "splitkb/aurora/corne/rev1"
+            directory: "keyboards/splitkb/aurora/corne/keymaps/samisagit"
             map: "samisagit"
     container: ghcr.io/qmk/qmk_cli
     runs-on: ubuntu-latest
@@ -38,6 +39,7 @@ jobs:
         # compile a given keyboard/map
         qmk compile -kb ${{ matrix.keyboard.board }} -km ${{ matrix.keyboard.map }} -e CONVERT_TO=liatris -e BUILD_DIR=${{matrix.keyboard.board}}/${{matrix.keyboard.map}}
         # generate info for compiled map
+        qmk c2json -kb ${{ matrix.keyboard.board }} -km ${{ matrix.keyboard.map }} ${{ matrix.keyboard.directory }}/keymap.c > ${{ matrix.keyboard.directory }}/keymap.json
         qmk info -kb ${{ matrix.keyboard.board }} -km ${{ matrix.keyboard.map }} > ${{matrix.keyboard.board}}/${{matrix.keyboard.map}}/README.md
         # zip results for upload
         SLUG=$(echo -n ${{matrix.keyboard.board}}/${{matrix.keyboard.map}} | sed  's/\//-/g')
