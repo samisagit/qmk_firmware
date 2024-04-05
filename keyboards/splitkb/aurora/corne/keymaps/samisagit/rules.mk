@@ -1,0 +1,1 @@
+TAPDANCE_ENABLE = yes
