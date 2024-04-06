@@ -42,6 +42,7 @@ void td_l2_l4_reset(tap_dance_state_t *state, void *user_data)
 }
 
 tap_dance_action_t tap_dance_actions[] = {
+  // these could be rewritten to use closures, assuming C supports that...
   [TD_MOD_1_3] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_l1_l3_finished, td_l1_l3_reset),
   [TD_MOD_2_4] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_l2_l4_finished, td_l2_l4_reset)
 };
@@ -56,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_BSLS,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_HASH,  KC_SLSH,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-      KC_LGUI,   LSFT_T(KC_ENT),  TD(TD_MOD_1_3),                                           TD(TD_MOD_2_4),   RSFT_T(KC_SPC), KC_RALT
+      KC_LGUI,   LSFT_T(KC_ENT),  TD(TD_MOD_1_3),                                           TD(TD_MOD_2_4),   RSFT_T(KC_SPC), KC_LALT
                                       //`--------------------------'  `--------------------------'
 
   ),
